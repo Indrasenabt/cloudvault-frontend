@@ -3,16 +3,23 @@ import { getMyFiles, deleteFile } from '../services/fileService';
 
 function Dashboard() {
   const [files, setFiles] = useState([]);
-  
+
   const fetchFiles = async () => {
     try {
       const res = await getMyFiles();
-      setFiles(res.data);
+      console.log('Files API Response:', res.data); // Debug log
+      if (Array.isArray(res.data)) {
+        setFiles(res.data);
+      } else {
+        setFiles([]);
+        alert(res.data?.msg || 'Unexpected response from server.');
+      }
     } catch (err) {
+      console.error('Fetch files failed:', err);
       alert('Failed to load files');
     }
   };
-  
+
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this file?')) return;
     try {
@@ -22,12 +29,12 @@ function Dashboard() {
       alert('Delete failed');
     }
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/login';
   };
-  
+
   useEffect(() => {
     fetchFiles();
   }, []);
