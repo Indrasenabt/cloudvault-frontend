@@ -8,7 +8,7 @@ function Dashboard() {
     try {
       const res = await getMyFiles();
       console.log('Files API Response:', res.data); // Debug log
-      if (Array.isArray(res.data)) {
+      if (res.data.length) {
         setFiles(res.data);
       } else {
         setFiles([]);
